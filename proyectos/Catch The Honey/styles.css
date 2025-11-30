@@ -1,0 +1,127 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url(assets/HoneyCombBackground.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.background-darken {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.1); /* Adjust opacity */
+    z-index: 1;
+    pointer-events: none;
+}
+
+#game-container {
+    position: relative;
+    width: 1200px;
+    height: 650px;
+    overflow: hidden;
+    background-image: url(assets/HoneyCombBackground.png);
+    background-size: 128%;
+    background-position: center;
+    background-position-y: -59px;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    z-index: 2;
+}
+
+@keyframes player-float {
+    0% { translate: 0 0; }
+    50% { translate: 0 -12px; }
+    100% { translate: 0 0; }
+}
+
+#player{
+    position: absolute;
+    bottom: 10px;
+    left: 0px;
+    width: 120px;
+    height: 84px;
+    background-image: url(assets/AbejitaNeutralL.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: scaleX(var(--flip));
+    animation: player-float 2s ease-in-out infinite;
+}
+
+#player.flipped {
+    animation: player-float 2s ease-in-out infinite;
+}
+
+.falling-object {
+    position: absolute;
+    top: 0;
+    width: 70px;
+    height: 70px;
+    background-image: url(assets/HoneyComb.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#cronometer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 150px; /* Adjust width to fit the background image */
+    height: 50px; /* Adjust height to fit the background image */
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 0.9rem; /* Adjust font size to fit inside the background */
+    font-weight: bold;
+    letter-spacing: -1px;
+    font-stretch: condensed;   /* May help if the font supports it */
+    color: #8b4513;
+    text-align: right; /* Center the text horizontally */
+    line-height: 50px; /* Center the text vertically */
+    padding-right: 20px; /* Add padding to the right for the text */
+    background-image: url(assets/CounterTime.png); /* Add the background image */
+    background-size: cover; /* Ensure the image covers the entire element */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+
+#score {
+    position: absolute;
+    top: 70px; /* Position it below the chronometer */
+    left: 10px;
+    width: 150px; /* Adjust width to fit the background image */
+    height: 50px; /* Adjust height to fit the background image */
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 1rem; /* Adjust font size to fit inside the background */
+    font-weight: bold;
+    letter-spacing: -1px;
+    font-stretch: condensed;   /* May help if the font supports it */
+    color: #8b4513;
+    text-align: right; /* Center the text horizontally */
+    line-height: 50px; /* Center the text vertically */
+    padding-right: 20px; /* Add padding to the right for better alignment */
+    background-image: url(assets/CounterPoints.png); /* Add the background image */
+    background-size: cover; /* Ensure the image covers the entire element */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+
+#lives-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column-reverse; /* So the first child is at the bottom */
+    align-items: flex-end;
+    gap: 5px; /* Space between lives */
+    z-index: 10;
+}
+.life {
+    width: 50px;  /* Adjust as needed */
+    height: auto;
+    image-rendering: pixelated;
+}

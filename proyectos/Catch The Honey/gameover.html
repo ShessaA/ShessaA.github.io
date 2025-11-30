@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Game Over</title>
+    <link rel="stylesheet" href="gameover.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <img src="assets/GameOverTitle.png" alt="Game Over!" class="gameover-title"/>
+
+    <!-- Final score block (shows score & time for this run) -->
+    <div class="gameover-box">
+        <p id="final-score" class="final-score-text"></p>
+        <p id="final-time" class="final-time-text"></p>
+    </div>
+
+    <!-- Session high score block (appears under the final score image) -->
+    <div class="highscore-box">
+        <img src="assets/FinalHighScore.png" alt="Record" class="final-highscore-img"/>
+        <p id="record-score" class="record-score-text">0</p>
+        <p id="record-time" class="record-time-text"></p>
+    </div>
+
+    <button class="play-again-btn" onclick="window.location.href='index.html'"></button>
+    <button class="go-home-btn" onclick="window.location.href='home.html'"></button>
+
+    <script>
+        // Get score/time from URL (current run)
+        const params = new URLSearchParams(window.location.search);
+        const score = Number(params.get('score')) || 0;
+        const time = params.get('time') || '';
+
+        // Show current run results
+        document.getElementById('final-score').textContent = `${score}`;
+        document.getElementById('final-time').textContent = `${time}`;
+
+        // Session-only record handling:
+        // - Uses sessionStorage so the record starts at 0 each program run and is reset when the browser/program closes.
+        const prevHigh = Number(sessionStorage.getItem('highScore') || 0);
+        const prevHighTime = sessionStorage.getItem('highTime') || '';
+
+        let highScore = prevHigh;
+        let highTime = prevHighTime;
+
+        if (score > prevHigh) {
+            highScore = score;
+            highTime = time;
+            sessionStorage.setItem('highScore', String(highScore));
+            sessionStorage.setItem('highTime', highTime);
+        }
+
+        document.getElementById('record-score').textContent = `${highScore}`;
+        document.getElementById('record-time').textContent = `${highTime}`;
+    </script>
+</body>
+</html>

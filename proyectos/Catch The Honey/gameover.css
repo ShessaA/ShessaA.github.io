@@ -1,0 +1,169 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('assets/HoneyCombBackground.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+}
+
+.gameover-title {
+    width: 480px;
+    margin-bottom: -20px;
+    animation: float 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* expose a single variable so both boxes share the same height */
+:root {
+    --gameover-box-height: 160px; /* was 210px — lower to make boxes smaller */
+}
+
+/* gameover box (final score) */
+.gameover-box {
+    position: relative;
+    width: 300px;                 /* was 390px — keep proportional to new height */
+    height: var(--gameover-box-height);
+    display: flex;
+    flex-direction: column;
+    background-image: url('assets/FinalScoreGameOver.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    z-index: 1; /* behind highscore box if they overlap */
+    /* Text */
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 1.2rem;            /* reduced from 1.7rem */
+    font-stretch: condensed;
+    text-align: right;
+    line-height: 50px;
+    letter-spacing: -1px;
+    padding-right: 30px;          /* tweak to fit smaller box */
+    color: #ffefe9;
+}
+
+/* place the final score/time text on top of the final-score-img */
+.final-score-text,
+.final-time-text {
+    position: absolute;
+    right: 35px;               /* tweak to fit artwork */
+    margin: 0;
+    color: #ffefe9;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    text-align: right;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* vertical placement for the final score/time (tweak values if needed) */
+#final-score {
+    top: 17px;                    /* adjusted from 39px */
+    font-size: 1.5rem;            /* adjusted from 2rem */
+}
+
+#final-time {
+    top: 93px;                   /* adjusted from 130px */
+    font-size: 1.3rem;            /* adjusted from 1.9rem */
+}
+
+/* New/updated styles to place FinalHighScore under the FinalScore block.
+   Keep the same height as the gameover-box; width will scale proportionally
+   to the artwork's aspect ratio by sizing the image in-flow so the parent
+   element has the correct width and absolute-positioned text can sit on top. */
+.highscore-box {
+    position: relative;
+    display: inline-flex;           /* size to content (the image) */
+    align-items: center;
+    justify-content: center;
+    height: var(--gameover-box-height); /* same height as .gameover-box */
+    margin-top: 10px;
+    pointer-events: none; /* decorative */
+    z-index: 2; /* ensure highscore overlays gameover if they overlap */
+}
+
+/* keep the highscore artwork sized by height so width remains proportional;
+   put the image in-flow (not absolute) so the parent acquires its width */
+.highscore-box .final-highscore-img {
+    position: relative;   /* in-flow so parent width matches image */
+    height: 100%;
+    width: auto;            /* preserves artwork aspect ratio */
+    object-fit: contain;
+    image-rendering: pixelated;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* text that shows the session record (points / time). Position to match artwork layout.
+   Text sits on top of the artwork (z-index higher than the image). */
+.record-score-text,
+.record-time-text {
+    position: absolute;    /* absolute relative to .highscore-box */
+    right: 60px;                  /* adjusted from 75px */
+    margin: 0;
+    color: #ffefe9;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    text-align: right;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* finer vertical placement — adjust these values to match the exact artwork layout */
+#record-score {
+    top: 32px;                    /* adjusted from 39px */
+    font-size: 1.5rem;            /* adjusted from 2rem */
+}
+
+#record-time {
+    top: 108px;                   /* adjusted from 140px */
+    font-size: 1.3rem;            /* adjusted from 1.9rem */
+}
+
+.play-again-btn {
+    margin-top: 40px;
+    padding: 35px 35px;
+    border: none;
+    border-radius: 8px;
+    background-image: url('assets/BotonPlayAgain.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.play-again-btn:hover {
+    transform: scale(1.08);
+}
+
+.go-home-btn {
+    position: fixed;
+    left: 30px;
+    bottom: 30px;
+    padding: 30px 30px;
+    border: none;
+    border-radius: 8px;
+    background-image: url('assets/BotonGoBack.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    z-index: 200;
+}
+.go-home-btn:hover {
+    transform: scale(1.08);
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Catch The Honey! - Home</title>
+    <style>
+        body {
+            background-image: 
+                url('assets/HomepageBackgroundDetails.png'), /* detail image on top */
+                url('assets/HoneyCombBackground.png'); /* main background */
+            background-size: 850px, cover; /* adjust as needed */
+            background-position: center, center; /* adjust as needed */
+            background-repeat: no-repeat, no-repeat;
+            image-rendering: pixelated;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        .title-img {
+            margin-top: 150px;
+            width: 500px;
+            max-width: 90vw;    
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        .start-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            
+        }
+        .start-btn:hover img {
+            transform: scale(1.05); /* Slight zoom */
+            transition: transform 0.2s;
+        }
+        
+        .start-btn img {
+            transition: transform 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <img src="assets/GameTitle.png" alt="Catch The Honey!" class="title-img" />
+    <button class="start-btn" onclick="window.location.href='tutorial.html'">
+         <img src="assets/StartButton.png" alt="Start Game" style="height:130px; width:auto;" />
+    </button>
+</body>
+</html>

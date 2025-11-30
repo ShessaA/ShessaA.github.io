@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="./tutorial.js" defer></script>
+    <title>Catch The Honey! - Tutorial</title>
+
+    <style>
+        /* page-only override: make player semi-transparent in tutorial */
+        body.tutorial #player {
+            opacity: 0.60; /* adjust (0 = invisible, 1 = opaque) */
+            transition: opacity 240ms ease;
+            left: 50%;
+            /* offset from the center, then apply the -50% centering and flip */
+            transform: translateX(var(--player-offset, 0px)) translateX(-50%) scaleX(var(--flip, 1));
+            /* ensure animation that uses translate in keyframes still works */
+            will-change: transform;
+        }
+
+
+        /* tutorial UI styles (page-specific) */
+        #tutorial-overlay { position: absolute; inset: 0; pointer-events: none; }
+
+        /* container for the tutorial images, placed above the player */
+        .tutorial-ui {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 130px; /* adjust vertically so it's right above the player */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .tutorial-title {
+            width: 300px;
+            max-width: 90vw;
+            image-rendering: pixelated;
+            display: block;
+        }
+
+        .tutorial-arrows {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .tutorial-arrows img {
+            width: 70px;
+            height: auto;
+            opacity: 0.80; /* adjust (0 = invisible, 1 = opaque) */
+            transition: opacity 240ms ease;
+            image-rendering: pixelated;
+            display: block;
+        }
+    </style>
+</head>
+<body class="tutorial">
+    <div class="background-darken"></div>
+
+    <div id="game-container">
+        <div id="player"></div>
+        <div id="cronometer">0:00:0</div>
+        <div id="score">0</div>
+
+        <div id="lives-container">
+            <img src="assets/Heart.png" class="life">
+            <img src="assets/Heart.png" class="life">
+            <img src="assets/Heart.png" class="life">
+            <img src="assets/Heart.png" class="life">
+            <img src="assets/Heart.png" class="life">
+        </div>
+
+        <!-- Tutorial placeholder: you'll fill content later -->
+        <div id="tutorial-overlay">
+            <div class="tutorial-ui">
+                <img src="assets/MovementTutorialText.png" alt="Movement tutorial" class="tutorial-title" />
+                <div class="tutorial-arrows">
+                    <img src="assets/LeftArrow Up.png" alt="Left arrow" />
+                    <img src="assets/RightArrow Up.png" alt="Right arrow" />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
