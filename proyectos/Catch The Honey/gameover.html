@@ -52,6 +52,14 @@
 
         document.getElementById('record-score').textContent = `${highScore}`;
         document.getElementById('record-time').textContent = `${highTime}`;
+
+        // new: pressing Enter triggers the Play Again action
+        const playAgainBtn = document.querySelector('.play-again-btn');
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                playAgainBtn?.click();
+            }
+        });
     </script>
 </body>
 </html>
