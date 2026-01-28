@@ -20,14 +20,15 @@ const playerIsImg = player.tagName === 'IMG';
 const originalPlayerSrc = playerIsImg ? player.src : getComputedStyle(player).backgroundImage;
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft')  vx = -8;
-    if (e.key === 'ArrowRight') vx = 8;
+    const k = e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'a')  vx = -8;
+    if (k === 'arrowright' || k === 'd') vx = 8;
 });
 
 document.addEventListener('keyup', (e) => {
-    if ((e.key === 'ArrowLeft' && vx < 0) || (e.key === 'ArrowRight' && vx > 0)) {
-        vx = 0;
-    }
+    const k = e.key.toLowerCase();
+    if ((k === 'arrowleft' || k === 'a') && vx < 0) vx = 0;
+    if ((k === 'arrowright' || k === 'd') && vx > 0) vx = 0;
 });
 
 function movePlayerSmoothly() {
