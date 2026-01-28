@@ -21,24 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // If user presses arrow, exit tutorial and go to actual game
     function startGameHandler(e) {
-        const key = (e.key || '').toLowerCase();
-        const code = (e.code || '');
-        const activated = (
-            key === 'arrowleft' || key === 'arrowright' || key === 'a' || key === 'd' ||
-            code === 'ArrowLeft' || code === 'ArrowRight' || code === 'KeyA' || code === 'KeyD'
-        );
-
-        if (activated) {
+        const k = e.key && e.key.toLowerCase();
+        if (k === 'arrowleft' || k === 'arrowright' || k === 'a' || k === 'd') {
             tutorialActive = false;
             // navigate to real game
             window.location.href = 'index.html';
         }
     }
-
-    // Listen once for keydown (keyboard) and once for pointerdown (mouse/touch) as fallback
-    document.addEventListener('keydown', startGameHandler, { once: true });
-    document.addEventListener('pointerdown', function onPointer() {
-        document.removeEventListener('pointerdown', onPointer);
+    // attach to `window` to avoid focus-related issues; also allow click to start
+    window.addEventListener('keydown', startGameHandler, { once: true });
+    document.addEventListener('click', () => {
         tutorialActive = false;
         window.location.href = 'index.html';
     }, { once: true });
