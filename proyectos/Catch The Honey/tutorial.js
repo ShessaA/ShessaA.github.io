@@ -5,6 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const arrows = document.querySelectorAll('.tutorial-arrows img');
     const leftImg = arrows[0];
     const rightImg = arrows[1];
+    // find movement tutorial text image (flexible selector)
+    const movementImg = Array.from(document.images).find(img => img.src && img.src.includes('MovementTutorialText')) || null;
+
+    // image sets
+    const originalSet = {
+        rightDown: 'assets/RightArrow Down.png',
+        rightUp: 'assets/RightArrow Up.png',
+        leftDown: 'assets/LeftArrow Down.png',
+        leftUp: 'assets/LeftArrow Up.png',
+        movement: 'assets/MovementTutorialText.png'
+    };
+    const altSet = {
+        rightDown: 'assets/DKey Down.png',
+        rightUp: 'assets/DKey Up.png',
+        leftDown: 'assets/AKey Down.png',
+        leftUp: 'assets/AKey Up.png',
+        movement: 'assets/MovementAltTutorialText.png'
+    };
+    let currentSet = originalSet;
+    let usingAlt = false;
 
     // sizes / bounds
     const containerWidth = gameContainer.offsetWidth;
@@ -77,6 +97,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // helper: fade swap between sets (fades out, swaps srcs to the provided set's "up"/idle images, then fades in)
+    async function fadeSwapTo(targetSet, duration = 300) {
+        const imgs = [leftImg, rightImg];
+        if (movementImg) imgs.push(movementImg);
+        imgs.forEach(img => {
+            img.style.transition = `opacity ${duration}ms ease`;
+        });
+        // fade out
+        imgs.forEach(img => img.style.opacity = 0);
+        await sleep(duration + 20);
+        if (!tutorialActive) return;
+        // switch current set
+        currentSet = targetSet;
+        // set to idle/up images so next loop shows correct sprites
+        leftImg.src = currentSet.leftUp;
+        rightImg.src = currentSet.rightUp;
+        if (movementImg) movementImg.src = currentSet.movement;
+        // fade in
+        imgs.forEach(img => img.style.opacity = 1);
+        await sleep(duration + 20);
+    }
+
     // demo loop as specified
     (async function demoLoop() {
         // choose a reasonable speed similar to gameplay (px/sec)
@@ -89,10 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!tutorialActive) break;
 
             // 2) right arrow down + move right for 1s
-            rightImg.src = 'assets/RightArrow Down.png';
+            rightImg.src = currentSet.rightDown;
             await moveFor(1000, speedPxPerMs);
             // stop and revert right arrow
-            rightImg.src = 'assets/RightArrow Up.png';
+            rightImg.src = currentSet.rightUp;
 
             if (!tutorialActive) break;
 
@@ -100,13 +142,17 @@ document.addEventListener('DOMContentLoaded', () => {
             await sleep(200);
 
             // 4) left arrow down + move left for 2s (back toward start point)
-            leftImg.src = 'assets/LeftArrow Down.png';
+            leftImg.src = currentSet.leftDown;
             await moveFor(1000, -speedPxPerMs);
-            leftImg.src = 'assets/LeftArrow Up.png';
+            leftImg.src = currentSet.leftUp;
 
             if (!tutorialActive) break;
 
-            // wait 1s before repeating
+            // before repeating: swap to the other image-set with a fade so user sees A/D examples
+            const nextSet = usingAlt ? originalSet : altSet;
+            await fadeSwapTo(nextSet);
+            usingAlt = !usingAlt;
+            // small pause before next iteration
             await sleep(1000);
         }
     })();
