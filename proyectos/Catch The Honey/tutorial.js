@@ -21,19 +21,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // If user presses arrow, exit tutorial and go to actual game
     function startGameHandler(e) {
-        const k = e.key && e.key.toLowerCase();
-        if (k === 'arrowleft' || k === 'arrowright' || k === 'a' || k === 'd') {
+        const key = (e.key || '').toLowerCase();
+        const code = (e.code || '').toLowerCase();
+        const keyCode = e.keyCode || e.which || 0;
+
+        const isLeft = key === 'arrowleft' || code === 'arrowleft' || key === 'left' || keyCode === 37 || key === 'a' || code === 'keya' || keyCode === 65;
+        const isRight = key === 'arrowright' || code === 'arrowright' || key === 'right' || keyCode === 39 || key === 'd' || code === 'keyd' || keyCode === 68;
+
+        if (isLeft || isRight) {
             tutorialActive = false;
+            // cleanup listeners
+            window.removeEventListener('keydown', startGameHandler);
+            gameContainer.removeEventListener('click', startGameHandler);
+            gameContainer.removeEventListener('touchstart', startGameHandler);
             // navigate to real game
             window.location.href = 'index.html';
         }
     }
-    // attach to `window` to avoid focus-related issues; also allow click to start
-    window.addEventListener('keydown', startGameHandler, { once: true });
-    document.addEventListener('click', () => {
-        tutorialActive = false;
-        window.location.href = 'index.html';
-    }, { once: true });
+    // attach to window and provide click/touch fallback (no { once } to ensure proper detection/cleanup)
+    window.addEventListener('keydown', startGameHandler);
+    gameContainer.addEventListener('click', startGameHandler);
+    gameContainer.addEventListener('touchstart', startGameHandler);
 
     // helper: sleep
     const sleep = ms => new Promise(res => setTimeout(res, ms));
