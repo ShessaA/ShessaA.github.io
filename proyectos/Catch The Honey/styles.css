@@ -120,6 +120,56 @@ body {
     gap: 5px; /* Space between lives */
     z-index: 10;
 }
+
+/* multiplayer-friendly class rules (apply inside each half) */
+.half .cronometer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 150px;
+    height: 50px;
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+    font-stretch: condensed;
+    color: #8b4513;
+    text-align: right;
+    line-height: 50px;
+    padding-right: 20px;
+    background-image: url(assets/CounterTime.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.half .score {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    width: 150px;
+    height: 50px;
+    font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+    font-stretch: condensed;
+    color: #8b4513;
+    text-align: right;
+    line-height: 50px;
+    padding-right: 20px;
+    background-image: url(assets/CounterPoints.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.half .lives-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 5px;
+    z-index: 10;
+}
 .life {
     width: 50px;  /* Adjust as needed */
     height: auto;

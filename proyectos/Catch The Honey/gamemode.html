@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Catch The Honey! - Game Mode</title>
+    <style>
+        body {
+            background-image: url('assets/HoneyCombBackground.png'); /* main background */
+            background-size: cover; /* adjust as needed */
+            background-position: center, center; /* adjust as needed */
+            background-repeat: no-repeat, no-repeat;
+            image-rendering: pixelated;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 60px; /* space between the two buttons */
+            height: 100vh;
+            margin: 0;
+        }
+        .one-player-btn, .two-player-btn {
+            position: relative; /* allow absolute children */
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s; /* animate button-scale */
+        }
+        .one-player-btn:hover,
+        .two-player-btn:hover {
+            transform: scale(1.05); /* Slight zoom on whole button */
+        }
+        .one-player-btn .btn-bg,
+        .two-player-btn .btn-bg {
+            transition: transform 0.2s;
+            height: 250px; /* increase size here */
+            width: auto;
+        }
+        .btn-icon {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: auto;
+            animation: icon-bounce 2s ease-in-out infinite;
+            pointer-events: none; /* clicks pass through to button */
+            transition: transform 0.2s; /* allow hover scaling */
+        }
+
+        .two-player-btn .btn-icon {
+            width: 150px;        /* make the 2-player icon bigger */
+            top: 46%;            /* nudge it slightly higher */
+        }
+
+        @keyframes icon-bounce {
+            0%,100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -55%); }
+        }
+    </style>
+</head>
+<body>
+    <button class="one-player-btn" onclick="window.location.href='tutorial.html'">
+         <img class="btn-bg" src="assets/1PlayerButton.png" alt="Choose play alone" />
+         <img class="btn-icon" src="assets/1PlayerIcon.png" alt="Icon" />
+    </button>
+    <button class="two-player-btn" onclick="window.location.href='multiplayermode/index-multiplayer.html'">
+         <img class="btn-bg" src="assets/2PlayerButton.png" alt="Choose play with a friend" />
+         <img class="btn-icon" src="assets/2PlayerIcon.png" alt="Icon" />
+    </button>
+</body>
+</html>

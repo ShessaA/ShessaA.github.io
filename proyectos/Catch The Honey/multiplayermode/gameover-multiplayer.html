@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Game Over</title>
+    <link rel="stylesheet" href="gameover-multiplayer.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <img src="../assets/GameOverTitle.png" alt="Game Over!" class="gameover-title"/>
+
+    <!-- two-player final results side-by-side -->
+    <div class="results-row" style="display:flex;gap:28px;align-items:flex-start;margin-top:10px;">
+        <!-- left player result -->
+        <div class="highscore-box" style="display:inline-flex;flex-direction:column;align-items:center;">
+            <img id="art0" class="final-highscore-img" src="../assets/FinalScoreGameOver.png" alt="Player 1 Result" />
+            <p id="final-score-0" class="record-score-text"></p>
+            <p id="final-time-0" class="record-time-text"></p>
+        </div>
+
+        <!-- right player result -->
+        <div class="highscore-box" style="display:inline-flex;flex-direction:column;align-items:center;">
+            <img id="art1" class="final-highscore-img" src="../assets/FinalScoreGameOver.png" alt="Player 2 Result" />
+            <p id="final-score-1" class="record-score-text"></p>
+            <p id="final-time-1" class="record-time-text"></p>
+        </div>
+    </div>
+
+    <div style="margin-top:36px;display:flex;gap:20px;align-items:center;">
+        <button class="play-again-btn" onclick="window.location.href='index-multiplayer.html'"></button>
+        <button class="go-home-btn" onclick="window.location.href='../home.html'"></button>
+    </div>
+
+    <script>
+        // parse both players' scores/times from URL
+        const params = new URLSearchParams(window.location.search);
+        const s0 = Number(params.get('score0')) || 0;
+        const s1 = Number(params.get('score1')) || 0;
+        const t0 = params.get('time0') || '';
+        const t1 = params.get('time1') || '';
+
+        // populate text
+        document.getElementById('final-score-0').textContent = `${s0}`;
+        document.getElementById('final-time-0').textContent = t0;
+        document.getElementById('final-score-1').textContent = `${s1}`;
+        document.getElementById('final-time-1').textContent = t1;
+
+        // winner gets the FinalHighScore artwork (only if strictly greater)
+        if (s0 > s1) {
+            document.getElementById('art0').src = '../assets/FinalHighScore.png';
+        } else if (s1 > s0) {
+            document.getElementById('art1').src = '../assets/FinalHighScore.png';
+        }
+
+        // pressing Enter triggers Play Again
+        const playAgainBtn = document.querySelector('.play-again-btn');
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') playAgainBtn?.click();
+        });
+    </script>
+</body>
+</html>

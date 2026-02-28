@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="./script-multiplayer.js" defer></script>
+    <title>Catch The Honey! Multiplayer</title>
+    <style>
+        /* adapt container for two players */
+        #game-container {
+            display: flex;
+            height: 90vh;
+            width: 90vw;
+            position: relative; /* for divider positioning */
+            margin-top: 8px;
+            gap: 40px;           /* space between left and right halves */
+        }
+        #divider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            width: auto;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .half {
+            position: relative;
+            flex: 1 1 0;   /* share available space with gap taken into account */
+            min-width: 0; /* allow shrinking if container narrows */
+            overflow: hidden;
+        }
+
+        .player.dead { filter: brightness(0.7) grayscale(0.3); }
+
+        /* reuse existing .player styles but point different images */
+        #player1.player { background-image: url('../assets/AbejitaNeutralL.png'); }
+        #player2.player { background-image: url('../assets/AbejitaP2NeutralL.png'); }
+        /* override original selector which used #player so it doesn't apply here */
+        .player {
+            position: absolute;
+            bottom: 10px;
+            left: 0px;
+            width: 120px;
+            height: 84px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform: scaleX(var(--flip));
+            animation: player-float 2s ease-in-out infinite;
+        }
+
+        #divider {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 90%;
+            width: auto;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-darken"></div>
+    <div id="game-container">
+        <!-- vertical divider between halves -->
+        <img id="divider" src="../assets/LineaDivisoria.png" alt="Divider" />
+        <!-- left player area -->
+        <div class="half" id="left-area">
+            <div id="player1" class="player"></div>
+            <div class="cronometer">0:00:00</div>
+            <div class="score">0</div>
+            <div class="lives-container">
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+            </div>
+        </div>
+        <!-- right player area -->
+        <div class="half" id="right-area">
+            <div id="player2" class="player"></div>
+            <div class="cronometer">0:00:00</div>
+            <div class="score">0</div>
+            <div class="lives-container">
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+                <img src="../assets/Heart.png" class="life" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
