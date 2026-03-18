@@ -6,6 +6,8 @@ const containerWidth = gameContainer.offsetWidth;
 const halfWidth = containerWidth / 2;
 // assume both players use same sprite dimensions
 const playerWidth = player1.offsetWidth;
+// player horizontal speed in px/sec (tunable)
+const PLAYER_SPEED_PX_PER_SEC = 400;
 
 // UI elements (arrays, index 0 = left, 1 = right)
 const scoreEls = document.querySelectorAll('.score');
@@ -53,7 +55,7 @@ let playerPosition = [
 ];
 player1.style.left = playerPosition[0] + 'px';
 player2.style.left = playerPosition[1] + 'px';
-let vx = [0, 0]; // velocities for each player
+let vx = [0, 0]; // velocities for each player (px/sec)
 
 // temporary animation/state helpers (one per player)
 let playerStateTimer = [null, null];
@@ -66,10 +68,10 @@ const originalPlayerSrc2 = player2IsImg ? player2.src : getComputedStyle(player2
 // control left player with A/D and right player with arrow keys
 document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
-    if (k === 'a') vx[0] = -8;
-    if (k === 'd') vx[0] = 8;
-    if (k === 'arrowleft') vx[1] = -8;
-    if (k === 'arrowright') vx[1] = 8;
+    if (k === 'a') vx[0] = -PLAYER_SPEED_PX_PER_SEC;
+    if (k === 'd') vx[0] = PLAYER_SPEED_PX_PER_SEC;
+    if (k === 'arrowleft') vx[1] = -PLAYER_SPEED_PX_PER_SEC;
+    if (k === 'arrowright') vx[1] = PLAYER_SPEED_PX_PER_SEC;
 });
 
 document.addEventListener('keyup', (e) => {
@@ -80,12 +82,18 @@ document.addEventListener('keyup', (e) => {
     if (k === 'arrowright' && vx[1] > 0) vx[1] = 0;
 });
 
-function movePlayersSmoothly() {
+// Use time-based movement so speed is consistent across frame rates.
+let lastFrameTimeMulti = null;
+function movePlayersSmoothly(timestamp) {
+    if (lastFrameTimeMulti === null) lastFrameTimeMulti = timestamp;
+    const dt = (timestamp - lastFrameTimeMulti) / 1000; // seconds
+    lastFrameTimeMulti = timestamp;
+
     // update player 1 (left half)
     if (alive[0]) {
         const min1 = 0;
         const max1 = halfWidth - playerWidth;
-        playerPosition[0] += vx[0];
+        playerPosition[0] += vx[0] * dt;
         if (playerPosition[0] < min1) playerPosition[0] = min1;
         if (playerPosition[0] > max1) playerPosition[0] = max1;
         if (vx[0] > 0) {
@@ -100,7 +108,7 @@ function movePlayersSmoothly() {
     if (alive[1]) {
         const min2 = 0;
         const max2 = halfWidth - playerWidth;
-        playerPosition[1] += vx[1];
+        playerPosition[1] += vx[1] * dt;
         if (playerPosition[1] < min2) playerPosition[1] = min2;
         if (playerPosition[1] > max2) playerPosition[1] = max2;
         if (vx[1] > 0) {
@@ -114,7 +122,7 @@ function movePlayersSmoothly() {
     requestAnimationFrame(movePlayersSmoothly);
 }
 
-movePlayersSmoothly();
+requestAnimationFrame(movePlayersSmoothly);
 
 // Keep physical gap constant: interval(ms) = distance(px) / speed(px/sec) * 1000
 function getSpawnInterval(currentSpeedPxPerSec) {
@@ -142,10 +150,19 @@ function createFallingObject(initialSpeedPxPerSec) {
     let objectY = -10; // start slightly above
     const object = document.createElement('div');
     // determine horizontal spawn range based on alive halves
+    // Avoid spawning too close to the center when both players are alive
+    const CENTER_BUFFER_PX = 120; // tunable: total forbidden width centered on midline
     let spawnMin, spawnMax;
+    const mid = containerWidth / 2;
     if (alive[0] && alive[1]) {
-        spawnMin = 0;
-        spawnMax = containerWidth;
+        // pick a side (left or right) so objects near the center don't overlap both players
+        if (Math.random() < 0.5) {
+            spawnMin = 0;
+            spawnMax = Math.max(0, mid - CENTER_BUFFER_PX / 2);
+        } else {
+            spawnMin = Math.min(containerWidth, mid + CENTER_BUFFER_PX / 2);
+            spawnMax = containerWidth;
+        }
     } else if (alive[0]) {
         spawnMin = 0;
         spawnMax = halfWidth;

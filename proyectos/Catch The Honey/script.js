@@ -11,7 +11,9 @@ let missedCount = 0;
 let score = 0;
 let playerPosition = Math.round((containerWidth - playerWidth) / 2); // left-edge px to center visually
 player.style.left = playerPosition + 'px';
-let vx = 0; // current velocity
+// player horizontal velocity in px/sec (positive = right, negative = left)
+const PLAYER_SPEED_PX_PER_SEC = 400; // tunable: pixels per second
+let vx = 0; // current velocity in px/sec
 
 // new: player temporary state / animation controls
 let playerStateTimer = null;      // timeout to restore player image
@@ -21,22 +23,31 @@ const originalPlayerSrc = playerIsImg ? player.src : getComputedStyle(player).ba
 
 document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
-    if (k === 'arrowleft' || k === 'a')  vx = -8;
-    if (k === 'arrowright' || k === 'd') vx = 8;
+    if (k === 'arrowleft' || k === 'a')  vx = -PLAYER_SPEED_PX_PER_SEC;
+    if (k === 'arrowright' || k === 'd') vx = PLAYER_SPEED_PX_PER_SEC;
 });
 
 document.addEventListener('keyup', (e) => {
     const k = e.key.toLowerCase();
+    // only stop if the released key matches the current movement direction
     if ((k === 'arrowleft' || k === 'a') && vx < 0) vx = 0;
     if ((k === 'arrowright' || k === 'd') && vx > 0) vx = 0;
 });
 
-function movePlayerSmoothly() {
+// Use time-based movement so speed is consistent across frame rates.
+let lastFrameTime = null;
+function movePlayerSmoothly(timestamp) {
+    // timestamp provided by requestAnimationFrame in ms
+    if (lastFrameTime === null) lastFrameTime = timestamp;
+    const dt = (timestamp - lastFrameTime) / 1000; // seconds elapsed since last frame
+    lastFrameTime = timestamp;
+
     // playerPosition represents the left-edge in px, so clamp to [0, containerWidth - playerWidth]
     const minLeft = 0;
     const maxLeft = containerWidth - playerWidth;
 
-    playerPosition += vx;
+    // vx is px/sec, so multiply by dt to get px to move this frame
+    playerPosition += vx * dt;
     if (playerPosition < minLeft) playerPosition = minLeft;
     if (playerPosition > maxLeft) playerPosition = maxLeft;
 
@@ -51,7 +62,7 @@ function movePlayerSmoothly() {
     requestAnimationFrame(movePlayerSmoothly);
 }
 
-movePlayerSmoothly();
+requestAnimationFrame(movePlayerSmoothly);
 
 // Keep physical gap constant: interval(ms) = distance(px) / speed(px/sec) * 1000
 function getSpawnInterval(currentSpeedPxPerSec) {
