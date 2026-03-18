@@ -150,18 +150,28 @@ function createFallingObject(initialSpeedPxPerSec) {
     let objectY = -10; // start slightly above
     const object = document.createElement('div');
     // determine horizontal spawn range based on alive halves
-    // Avoid spawning too close to the center when both players are alive
-    const CENTER_BUFFER_PX = 120; // tunable: total forbidden width centered on midline
     let spawnMin, spawnMax;
-    const mid = containerWidth / 2;
+    const CENTER_GAP_PX = Math.max(120, Math.round(playerWidth * 1.2)); // avoid spawning too close to center
     if (alive[0] && alive[1]) {
-        // pick a side (left or right) so objects near the center don't overlap both players
-        if (Math.random() < 0.5) {
+        // exclude a central band so objects don't spawn too close to the midpoint
+        const leftZoneMax = Math.max(0, halfWidth - Math.floor(CENTER_GAP_PX / 2));
+        const rightZoneMin = Math.min(containerWidth, halfWidth + Math.ceil(CENTER_GAP_PX / 2));
+        // compute available widths to pick left or right proportional to space
+        const leftWidth = leftZoneMax - 0;
+        const rightWidth = containerWidth - rightZoneMin;
+        if (leftWidth <= 0 && rightWidth <= 0) {
+            // fallback: no room, allow full range
             spawnMin = 0;
-            spawnMax = Math.max(0, mid - CENTER_BUFFER_PX / 2);
-        } else {
-            spawnMin = Math.min(containerWidth, mid + CENTER_BUFFER_PX / 2);
             spawnMax = containerWidth;
+        } else {
+            const pick = Math.random() * (leftWidth + rightWidth);
+            if (pick < leftWidth) {
+                spawnMin = 0;
+                spawnMax = leftZoneMax;
+            } else {
+                spawnMin = rightZoneMin;
+                spawnMax = containerWidth;
+            }
         }
     } else if (alive[0]) {
         spawnMin = 0;
