@@ -26,10 +26,13 @@
     <button class="go-home-btn" onclick="window.location.href='home.html'"></button>
 
     <script>
-        // Get score/time from URL (current run)
-        const params = new URLSearchParams(window.location.search);
-        const score = Number(params.get('score')) || 0;
-        const time = params.get('time') || '';
+        // Get score/time from sessionStorage (current run)
+        const score = Number(sessionStorage.getItem('lastScore') || 0);
+        const time = sessionStorage.getItem('lastTime') || '';
+
+        // Clear the temporary values after reading them
+        sessionStorage.removeItem('lastScore');
+        sessionStorage.removeItem('lastTime');
 
         // Show current run results
         document.getElementById('final-score').textContent = `${score}`;

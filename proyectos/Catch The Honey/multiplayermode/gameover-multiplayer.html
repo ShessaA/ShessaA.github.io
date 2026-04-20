@@ -32,12 +32,16 @@
     </div>
 
     <script>
-        // parse both players' scores/times from URL
-        const params = new URLSearchParams(window.location.search);
-        const s0 = Number(params.get('score0')) || 0;
-        const s1 = Number(params.get('score1')) || 0;
-        const t0 = params.get('time0') || '';
-        const t1 = params.get('time1') || '';
+        // read both players' scores/times from sessionStorage
+        const s0 = Number(sessionStorage.getItem('lastScore0') || 0);
+        const s1 = Number(sessionStorage.getItem('lastScore1') || 0);
+        const t0 = sessionStorage.getItem('lastTime0') || '';
+        const t1 = sessionStorage.getItem('lastTime1') || '';
+
+        sessionStorage.removeItem('lastScore0');
+        sessionStorage.removeItem('lastTime0');
+        sessionStorage.removeItem('lastScore1');
+        sessionStorage.removeItem('lastTime1');
 
         // populate text
         document.getElementById('final-score-0').textContent = `${s0}`;

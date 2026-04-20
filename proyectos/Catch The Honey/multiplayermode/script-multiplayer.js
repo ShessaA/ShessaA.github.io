@@ -45,7 +45,7 @@ function onPlayerDead(i) {
     }
 }
 
-let startTime = Date.now();
+let startTime = [Date.now(), Date.now()];
 let missedCount = [0, 0];
 let score = [0, 0];
 // two player positions (left-edge pixel relative to each half)
@@ -146,6 +146,10 @@ function calculateCurrentSpeed(currentScore, opts = {}) {
 let spawnTimerId = null;
 let spawnActive = false;
 
+// fairness: do not spawn more than 4 objects in a row on the same half
+let lastSpawnSide = null; // 'left' or 'right'
+let consecutiveSameSideSpawns = 0;
+
 function createFallingObject(initialSpeedPxPerSec) {
     let objectY = -10; // start slightly above
     const object = document.createElement('div');
@@ -157,21 +161,38 @@ function createFallingObject(initialSpeedPxPerSec) {
         const leftZoneMax = Math.max(0, halfWidth - Math.floor(CENTER_GAP_PX / 2));
         const rightZoneMin = Math.min(containerWidth, halfWidth + Math.ceil(CENTER_GAP_PX / 2));
         // compute available widths to pick left or right proportional to space
-        const leftWidth = leftZoneMax - 0;
-        const rightWidth = containerWidth - rightZoneMin;
-        if (leftWidth <= 0 && rightWidth <= 0) {
-            // fallback: no room, allow full range
+        const leftWidth = Math.max(0, leftZoneMax);
+        const rightWidth = Math.max(0, containerWidth - rightZoneMin);
+
+        let spawnSide = null;
+        if (leftWidth > 0 && rightWidth > 0) {
+            if (lastSpawnSide !== null && consecutiveSameSideSpawns >= 4) {
+                spawnSide = lastSpawnSide === 'left' ? 'right' : 'left';
+            } else {
+                spawnSide = Math.random() < leftWidth / (leftWidth + rightWidth) ? 'left' : 'right';
+            }
+        } else if (leftWidth > 0) {
+            spawnSide = 'left';
+        } else if (rightWidth > 0) {
+            spawnSide = 'right';
+        }
+
+        if (spawnSide === 'left') {
             spawnMin = 0;
+            spawnMax = leftZoneMax;
+        } else if (spawnSide === 'right') {
+            spawnMin = rightZoneMin;
             spawnMax = containerWidth;
         } else {
-            const pick = Math.random() * (leftWidth + rightWidth);
-            if (pick < leftWidth) {
-                spawnMin = 0;
-                spawnMax = leftZoneMax;
-            } else {
-                spawnMin = rightZoneMin;
-                spawnMax = containerWidth;
-            }
+            spawnMin = 0;
+            spawnMax = containerWidth;
+        }
+
+        if (spawnSide === lastSpawnSide) {
+            consecutiveSameSideSpawns++;
+        } else {
+            lastSpawnSide = spawnSide;
+            consecutiveSameSideSpawns = spawnSide ? 1 : 0;
         }
     } else if (alive[0]) {
         spawnMin = 0;
@@ -406,12 +427,17 @@ startSpawnLoop();
 setInterval(updateCronometer, 10);
 
 function updateCronometer() {
-    const elapsedTime = Date.now() - startTime;
-    const minutes = Math.floor(elapsedTime / 60000);
-    const seconds = Math.floor((elapsedTime % 60000) / 1000);
-    const milliseconds = Math.floor((elapsedTime % 1000) / 100);
-    const text = `${minutes}:${seconds.toString().padStart(2, '0')}:${milliseconds}`;
-    cronometerEls.forEach(el => { if (el) el.textContent = text; });
+    for (let i = 0; i < 2; i++) {
+        if (alive[i]) {
+            const elapsedTime = Date.now() - startTime[i];
+            const minutes = Math.floor(elapsedTime / 60000);
+            const seconds = Math.floor((elapsedTime % 60000) / 1000);
+            const milliseconds = Math.floor((elapsedTime % 1000) / 100);
+            const text = `${minutes}:${seconds.toString().padStart(2, '0')}:${milliseconds}`;
+            if (cronometerEls[i]) cronometerEls[i].textContent = text;
+        }
+        // If not alive, leave the textContent as is (stopped at death time)
+    }
 }
 
 function loseLife(playerIndex = 0) {
@@ -429,8 +455,11 @@ function gameOver(playerIndex = 0) {
     const time1 = (cronometerEls[1] && cronometerEls[1].textContent) || '';
     const s0 = Number(score[0] || 0);
     const s1 = Number(score[1] || 0);
-    const params = `score0=${s0}&time0=${encodeURIComponent(time0)}&score1=${s1}&time1=${encodeURIComponent(time1)}`;
-    window.location.href = `gameover-multiplayer.html?${params}`;
+    sessionStorage.setItem('lastScore0', String(s0));
+    sessionStorage.setItem('lastTime0', time0);
+    sessionStorage.setItem('lastScore1', String(s1));
+    sessionStorage.setItem('lastTime1', time1);
+    window.location.href = 'gameover-multiplayer.html';
 }
 
 document.addEventListener('visibilitychange', function() {

@@ -86,6 +86,10 @@ function calculateCurrentSpeed(currentScore, opts = {}) {
 let spawnTimerId = null;
 let spawnActive = false;
 
+// fairness: don't spawn more than 4 objects in a row on the same side
+let lastSpawnSide = null; // 'left' or 'right'
+let consecutiveSameSideSpawns = 0;
+
 function createFallingObject(initialSpeedPxPerSec) {
     let objectY = -10; // start slightly above
     const object = document.createElement('div');
@@ -117,9 +121,36 @@ function createFallingObject(initialSpeedPxPerSec) {
         object.dataset.value = '1';
     }
 
-    // get object's width and set random left within container
+    // get object's width and choose a fair left/right spawn side
     const objectWidth = object.offsetWidth || 40;
-    const initialLeft = Math.random() * (containerWidth - objectWidth);
+
+    const half = Math.floor(containerWidth / 2);
+    const leftMax = Math.max(0, half - objectWidth);
+    const rightMin = Math.min(half, containerWidth - objectWidth);
+
+    let spawnSide = Math.random() < 0.5 ? 'left' : 'right';
+    if (lastSpawnSide !== null && consecutiveSameSideSpawns >= 4) {
+        spawnSide = lastSpawnSide === 'left' ? 'right' : 'left';
+    }
+
+    if (spawnSide === 'left' && leftMax <= 0) spawnSide = 'right';
+    if (spawnSide === 'right' && rightMin >= containerWidth) spawnSide = 'left';
+
+    let initialLeft;
+    if (spawnSide === 'left') {
+        initialLeft = Math.random() * leftMax;
+    } else {
+        const rightRange = Math.max(0, containerWidth - objectWidth - rightMin);
+        initialLeft = rightMin + Math.random() * rightRange;
+    }
+
+    if (spawnSide === lastSpawnSide) {
+        consecutiveSameSideSpawns++;
+    } else {
+        lastSpawnSide = spawnSide;
+        consecutiveSameSideSpawns = 1;
+    }
+
     // For leaves we will update left each frame to create a sway
     let objectX = initialLeft;
     object.style.left = Math.round(objectX) + 'px';
@@ -279,7 +310,9 @@ function loseLife() {
 
 function gameOver() {
     const time = cronometerEl.textContent;
-    window.location.href = `gameover.html?score=${score}&time=${encodeURIComponent(time)}`;
+    sessionStorage.setItem('lastScore', String(score));
+    sessionStorage.setItem('lastTime', time);
+    window.location.href = 'gameover.html';
 }
 
 document.addEventListener('visibilitychange', function() {
