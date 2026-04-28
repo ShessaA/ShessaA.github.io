@@ -63,6 +63,24 @@ document.addEventListener('DOMContentLoaded', () => {
     gameContainer.addEventListener('click', startGameHandler);
     gameContainer.addEventListener('touchstart', startGameHandler);
 
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+
+    const goToIndex = (e) => {
+        if (e) {
+            e.stopPropagation();
+            if (e.cancelable) e.preventDefault();
+        }
+        window.location.href = 'index.html';
+    };
+
+    [btnLeft, btnRight].forEach(button => {
+        if (!button) return;
+        button.addEventListener('touchstart', goToIndex, { passive: false });
+        button.addEventListener('pointerdown', goToIndex);
+        button.addEventListener('click', goToIndex);
+    });
+
     // helper: sleep
     const sleep = ms => new Promise(res => setTimeout(res, ms));
 

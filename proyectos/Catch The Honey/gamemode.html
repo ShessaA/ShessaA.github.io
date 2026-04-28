@@ -54,6 +54,42 @@
             top: 46%;            /* nudge it slightly higher */
         }
 
+        .two-player-label {
+            display: none;
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.72);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            letter-spacing: 0;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            .two-player-btn {
+                filter: brightness(0.5);
+                cursor: default;
+                pointer-events: none;
+            }
+
+            .two-player-label {
+                display: block;
+            }
+        }
+
+        @media (max-width: 900px) and (orientation: portrait) {
+            body {
+                flex-direction: column;
+                gap: 24px;
+            }
+        }
+
         @keyframes icon-bounce {
             0%,100% { transform: translate(-50%, -50%); }
             50% { transform: translate(-50%, -55%); }
@@ -68,6 +104,7 @@
     <button class="two-player-btn" onclick="window.location.href='multiplayermode/index-multiplayer.html'">
          <img class="btn-bg" src="assets/2PlayerButton.png" alt="Choose play with a friend" />
          <img class="btn-icon" src="assets/2PlayerIcon.png" alt="Icon" />
+         <span class="two-player-label">Coming Soon!</span>
     </button>
 </body>
 </html>

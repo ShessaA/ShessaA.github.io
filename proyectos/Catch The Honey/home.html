@@ -47,6 +47,23 @@
         .start-btn img {
             transition: transform 0.2s;
         }
+
+        @media only screen and (orientation: landscape) and (max-width: 900px) {
+            body {
+                justify-content: flex-start;
+                padding-top: 24px;
+                height: auto;
+            }
+
+            .title-img {
+                margin-top: 80px;
+                width: min(320px, 70vw);
+            }
+
+            .start-btn img {
+                height: 100px;
+            }
+        }
     </style>
 </head>
 <body>

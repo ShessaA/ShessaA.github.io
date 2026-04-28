@@ -175,3 +175,180 @@ body {
     height: auto;
     image-rendering: pixelated;
 }
+
+#orientation-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 235, 59, 0.95);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+#orientation-overlay .orientation-message {
+    pointer-events: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-family: 'Press Start 2P', sans-serif;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.4;
+    padding: 1.5rem;
+    border: 4px solid #fbc02d;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    max-width: 90%;
+}
+
+@media (orientation: portrait) {
+    #orientation-overlay {
+        display: block;
+    }
+}
+
+@media (orientation: landscape) {
+    #orientation-overlay {
+        display: none;
+    }
+}
+
+#mobile-ui {
+    display: none;
+}
+
+#mobile-ui .touch-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background-color: transparent;
+    color: transparent;
+    font-size: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 3px solid #fbc02d;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    user-select: none;
+    touch-action: none;
+    position: absolute;
+    bottom: 12px;
+    pointer-events: auto;
+}
+
+#btn-left {
+    background-image: url('assets/LeftArrow Up.png');
+    left: 12px;
+}
+
+#btn-left.pressed,
+#btn-left:active {
+    background-image: url('assets/LeftArrow Down.png');
+}
+
+#btn-right {
+    background-image: url('assets/RightArrow Up.png');
+    right: 12px;
+}
+
+#btn-right.pressed,
+#btn-right:active {
+    background-image: url('assets/RightArrow Down.png');
+}
+
+@media (max-width: 900px) {
+    #mobile-ui {
+        display: block;
+        position: absolute;
+        inset: auto 0 0 0;
+        pointer-events: none;
+        z-index: 11;
+    }
+
+    #mobile-ui .touch-button {
+        width: 72px;
+        height: 72px;
+    }
+
+    .falling-object {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        align-items: flex-start;
+        padding: 10px 0 20px;
+    }
+
+    #game-container {
+        width: min(100vw, 1200px);
+        height: min(calc(100vh - 20px), 650px);
+        max-width: 100%;
+        max-height: calc(100vh - 20px);
+    }
+
+    #player {
+        width: 80px;
+        height: 56px;
+        bottom: 20px;
+    }
+
+    #cronometer,
+    #score {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        padding-right: 12px;
+        box-sizing: border-box;
+        padding-top: 6px; /* move text down without changing box size */
+        line-height: 2.5;
+    }
+
+    #cronometer {
+        top: 8px;
+        height: 42px;
+    }
+
+    #score {
+        top: 56px;
+        height: 42px;
+    }
+
+    #lives-container {
+        top: 8px;
+        right: 8px;
+        gap: 4px;
+    }
+
+    .life {
+        width: 40px;
+    }
+
+    #touch-controls {
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 11;
+    }
+
+    #touch-controls button {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+
+    #orientation-overlay .orientation-message {
+        font-size: 0.95rem;
+        padding: 1rem;
+    }
+}

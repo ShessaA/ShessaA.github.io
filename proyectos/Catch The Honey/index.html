@@ -9,6 +9,11 @@
     <title>Catch The Honey!</title>
 </head>
 <body>
+    <div id="orientation-overlay">
+        <div class="orientation-message">
+            Please rotate your device<br>to landscape mode
+        </div>
+    </div>
     <div class="background-darken"></div>
     <div id="game-container">
         <div id="player"></div>
@@ -20,6 +25,10 @@
             <img src="assets/Heart.png" class="life" />
             <img src="assets/Heart.png" class="life" />
             <img src="assets/Heart.png" class="life" />
+        </div>
+        <div id="mobile-ui" class="mobile-ui">
+            <div id="btn-left" class="touch-button" aria-label="Left"></div>
+            <div id="btn-right" class="touch-button" aria-label="Right"></div>
         </div>
     </div>
 </body>

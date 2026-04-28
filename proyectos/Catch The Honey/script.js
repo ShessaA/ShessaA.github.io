@@ -12,8 +12,13 @@ let score = 0;
 let playerPosition = Math.round((containerWidth - playerWidth) / 2); // left-edge px to center visually
 player.style.left = playerPosition + 'px';
 // player horizontal velocity in px/sec (positive = right, negative = left)
-const PLAYER_SPEED_PX_PER_SEC = 400; // tunable: pixels per second
+const PLAYER_SPEED_PX_PER_SEC = 400; // desktop speed
+const MOBILE_PLAYER_SPEED_PX_PER_SEC = 520; // mobile speed, use a faster responsive rate
 let vx = 0; // current velocity in px/sec
+
+function getPlayerSpeedPxPerSec() {
+    return window.matchMedia('(max-width: 900px)').matches ? MOBILE_PLAYER_SPEED_PX_PER_SEC : PLAYER_SPEED_PX_PER_SEC;
+}
 
 // new: player temporary state / animation controls
 let playerStateTimer = null;      // timeout to restore player image
@@ -23,8 +28,8 @@ const originalPlayerSrc = playerIsImg ? player.src : getComputedStyle(player).ba
 
 document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
-    if (k === 'arrowleft' || k === 'a')  vx = -PLAYER_SPEED_PX_PER_SEC;
-    if (k === 'arrowright' || k === 'd') vx = PLAYER_SPEED_PX_PER_SEC;
+    if (k === 'arrowleft' || k === 'a')  vx = -getPlayerSpeedPxPerSec();
+    if (k === 'arrowright' || k === 'd') vx = getPlayerSpeedPxPerSec();
 });
 
 document.addEventListener('keyup', (e) => {
@@ -33,6 +38,54 @@ document.addEventListener('keyup', (e) => {
     if ((k === 'arrowleft' || k === 'a') && vx < 0) vx = 0;
     if ((k === 'arrowright' || k === 'd') && vx > 0) vx = 0;
 });
+
+const btnLeft = document.getElementById('btn-left');
+const btnRight = document.getElementById('btn-right');
+
+function setButtonState(button, pressed) {
+    if (!button) return;
+    button.classList.toggle('pressed', pressed);
+}
+
+function handlePressStart(button, direction) {
+    return function(e) {
+        e.preventDefault();
+        vx = direction * getPlayerSpeedPxPerSec();
+        setButtonState(button, true);
+    };
+}
+
+function handlePressEnd(button) {
+    return function(e) {
+        if (e) e.preventDefault();
+        vx = 0;
+        setButtonState(button, false);
+    };
+}
+
+if (btnLeft) {
+    const start = handlePressStart(btnLeft, -1);
+    const end = handlePressEnd(btnLeft);
+    btnLeft.addEventListener('touchstart', start);
+    btnLeft.addEventListener('touchend', end);
+    btnLeft.addEventListener('touchcancel', end);
+    btnLeft.addEventListener('pointerdown', start);
+    btnLeft.addEventListener('pointerup', end);
+    btnLeft.addEventListener('pointercancel', end);
+    btnLeft.addEventListener('pointerleave', end);
+}
+
+if (btnRight) {
+    const start = handlePressStart(btnRight, 1);
+    const end = handlePressEnd(btnRight);
+    btnRight.addEventListener('touchstart', start);
+    btnRight.addEventListener('touchend', end);
+    btnRight.addEventListener('touchcancel', end);
+    btnRight.addEventListener('pointerdown', start);
+    btnRight.addEventListener('pointerup', end);
+    btnRight.addEventListener('pointercancel', end);
+    btnRight.addEventListener('pointerleave', end);
+}
 
 // Use time-based movement so speed is consistent across frame rates.
 let lastFrameTime = null;

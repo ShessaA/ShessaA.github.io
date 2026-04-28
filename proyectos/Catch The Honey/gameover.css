@@ -18,6 +18,15 @@ body {
     animation: float 2.5s ease-in-out infinite;
 }
 
+.gameover-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: max-content;
+    margin: 0 auto;
+}
+
 @keyframes float {
     0% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
@@ -26,13 +35,13 @@ body {
 
 /* expose a single variable so both boxes share the same height */
 :root {
-    --gameover-box-height: 160px; /* was 210px — lower to make boxes smaller */
+    --gameover-box-height: 140px; /* smaller boxes for a tighter mobile layout */
 }
 
 /* gameover box (final score) */
 .gameover-box {
     position: relative;
-    width: 300px;                 /* was 390px — keep proportional to new height */
+    width: 260px;                 /* smaller width for compact layout */
     height: var(--gameover-box-height);
     display: flex;
     flex-direction: column;
@@ -87,6 +96,7 @@ body {
     display: inline-flex;           /* size to content (the image) */
     align-items: center;
     justify-content: center;
+    width: 260px;
     height: var(--gameover-box-height); /* same height as .gameover-box */
     margin-top: 10px;
     pointer-events: none; /* decorative */
@@ -166,4 +176,47 @@ body {
 }
 .go-home-btn:hover {
     transform: scale(1.08);
+}
+
+@media only screen and (orientation: landscape) and (max-width: 900px) and (max-height: 650px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: center;
+        padding: 16px 8px 24px;
+        --gameover-box-height: 130px;
+    }
+
+    .gameover-title {
+        width: min(360px, 80vw);
+        margin: 0 auto 18px;
+    }
+
+    .gameover-grid {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: nowrap;
+        width: min(100vw, 472px);
+        margin: 0 auto 18px;
+    }
+
+    .gameover-box,
+    .highscore-box {
+        flex: 0 0 min(45vw, 220px);
+        width: min(45vw, 220px);
+        max-width: 220px;
+        min-width: 180px;
+        height: var(--gameover-box-height);
+        margin: 0;
+    }
+
+    .highscore-box .final-highscore-img {
+        width: 100%;
+        height: auto;
+    }
 }
