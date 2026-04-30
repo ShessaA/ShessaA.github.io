@@ -225,15 +225,12 @@ body {
     justify-content: center;
     width: 64px;
     height: 64px;
-    border-radius: 18px;
     background-color: transparent;
     color: transparent;
     font-size: 0;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    border: 3px solid #fbc02d;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     user-select: none;
     touch-action: none;
     position: absolute;

@@ -6,20 +6,25 @@
     <link rel="stylesheet" href="styles.css" />
     <title>Catch The Honey! - Home</title>
     <style>
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            overflow: hidden;
+        }
         body {
             background-image: 
                 url('assets/HomepageBackgroundDetails.png'),
                 url('assets/HoneyCombBackground.png');
-            background-size: 850px, cover;
-            background-position: center, center;
+            background-size: min(850px, 90vw) auto, cover;
+            background-position: center center, top center;
             background-repeat: no-repeat, no-repeat;
+            background-attachment: fixed;
             image-rendering: pixelated;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
         }
         @keyframes float {
             0% { transform: translateY(0); }
@@ -27,17 +32,24 @@
             100% { transform: translateY(0); }
         }
         .title-img {
-            margin-top: 150px;
-            width: 500px;
-            max-width: 90vw;    
+            margin-top: 20px;
+            width: min(400px, 90vw);
+            height: auto;
             animation: float 2.5s ease-in-out infinite;
+        }
+
+        .home-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
         }
 
         .start-btn {
             background: none;
             border: none;
             cursor: pointer;
-            
         }
         .start-btn:hover img {
             transform: scale(1.05); /* Slight zoom */
@@ -46,30 +58,78 @@
         
         .start-btn img {
             transition: transform 0.2s;
+            width: min(300px, 70vw);
+            height: auto;
+            max-width: 90vw;
         }
 
-        @media only screen and (orientation: landscape) and (max-width: 900px) {
+        @media only screen and (min-width: 900px) {
             body {
-                justify-content: flex-start;
-                padding-top: 24px;
-                height: auto;
+                background-size: contain, cover;
+                background-position: center center, top center;
+            }
+        }
+
+        @media only screen and (max-width: 600px) {
+            body {
+                background-attachment: fixed, fixed;
+                justify-content: center;
+                align-items: center;
+                padding: 0;
+                height: 100vh;
+                overflow: hidden;
             }
 
             .title-img {
-                margin-top: 80px;
-                width: min(320px, 70vw);
+                margin-top: 0;
+                width: min(260px, 65vw);
+                max-width: 90vw;
+                height: auto;
             }
 
             .start-btn img {
-                height: 100px;
+                width: min(220px, 60vw);
+                height: auto;
+            }
+        }
+
+        @media only screen and (max-width: 600px) and (orientation: landscape) {
+            .home-panel {
+                position: fixed;
+                top: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: min(90vw, 400px);
+                padding: 0 10px;
+                z-index: 10;
+            }
+
+            body {
+                background-size: contain, cover;
+                background-position: center center, top center;
+                background-attachment: fixed, fixed;
+                justify-content: flex-start;
+            }
+
+            .title-img {
+                margin-top: 0;
+                width: min(220px, 58vw);
+                max-width: 90vw;
+                max-height: 28vh;
+            }
+
+            .start-btn img {
+                width: min(200px, 52vw);
             }
         }
     </style>
 </head>
 <body>
-    <img src="assets/GameTitle.png" alt="Catch The Honey!" class="title-img" />
-    <button class="start-btn" onclick="window.location.href='gamemode.html'">
-         <img src="assets/StartButton.png" alt="Start Game" style="height:130px; width:auto;" />
-    </button>
+    <div class="home-panel">
+        <img src="assets/GameTitle.png" alt="Catch The Honey!" class="title-img" />
+        <button class="start-btn" onclick="window.location.href='gamemode.html'">
+             <img src="assets/StartButton.png" alt="Start Game" />
+        </button>
+    </div>
 </body>
 </html>

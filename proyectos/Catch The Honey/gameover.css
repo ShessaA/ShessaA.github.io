@@ -145,7 +145,6 @@ body {
     margin-top: 40px;
     padding: 35px 35px;
     border: none;
-    border-radius: 8px;
     background-image: url('assets/BotonPlayAgain.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -164,7 +163,6 @@ body {
     bottom: 30px;
     padding: 30px 30px;
     border: none;
-    border-radius: 8px;
     background-image: url('assets/BotonGoBack.png');
     background-size: cover;
     background-repeat: no-repeat;
